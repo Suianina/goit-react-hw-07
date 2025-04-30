@@ -1,58 +1,60 @@
 import css from './ContactForm.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 import { addContact } from '../../redux/contactsOps';
-import { selectContacts } from '../../redux/contactsSlice';
-import { useState } from 'react';
 
-export default function ContactForm() {
+const ContactForm = () => {
+  const nameFieldId = 'name-field';
+  const numberFieldId = 'number-field';
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
 
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const ContactsSchema = Yup.object().shape({
+    name: Yup.string().min(3, 'Too Short!').max(50, "Too Long!").required("Required"),
+    number: Yup.string().min(3, 'Too Short!').max(50, "Too Long!").required("Required")
+  });
 
-  const handleSubmit = e => {
-    e.preventDefault();
-
-    const isDuplicate = contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (isDuplicate) {
-      alert(`${name} is already in contacts`);
-      return;
-    }
-
-    dispatch(addContact({ name, number }));
-    setName('');
-    setNumber('');
+  const handleSubmit = (values, actions) => {
+    dispatch(addContact({
+      name: values.name,
+      number: values.number,
+    }));
+    actions.resetForm();
   };
 
   return (
-    <form className={css.form} onSubmit={handleSubmit}>
-      <label className={css.label}>
-        Name
-        <input
-          className={css.input}
+    <Formik
+      initialValues={{
+        id: '',
+        name: '',
+        number: '',
+      }}
+      onSubmit={handleSubmit}
+      validationSchema={ContactsSchema}
+    >
+      <Form className={css.form}>
+        <label className={css.name} htmlFor={nameFieldId}>
+          Name
+        </label>
+        <Field className={css.field} type="text" name="name" id={nameFieldId} />
+        <ErrorMessage className={css.error} name="name" component="span" />
+
+        <label className={css.name} htmlFor={numberFieldId}>
+          Number
+        </label>
+        <Field
+          className={css.field}
           type="text"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          required
+          name="number"
+          id={numberFieldId}
         />
-      </label>
-      <label className={css.label}>
-        Number
-        <input
-          className={css.input}
-          type="tel"
-          value={number}
-          onChange={e => setNumber(e.target.value)}
-          required
-        />
-      </label>
-      <button className={css.button} type="submit">
-        Add contact
-      </button>
-    </form>
+        <ErrorMessage className={css.error} name="number" component="span" />
+        <button className={css.btn} type="submit">
+          Add contact
+        </button>
+      </Form>
+    </Formik>
   );
 }
+
+export default ContactForm;
