@@ -2,7 +2,7 @@ import './App.jsx adjustment.css';
 import { Suspense, lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContacts } from './redux/contactsOps';
-import { selectContacts, selectVisibleContacts } from './redux/selectors';
+import { selectContacts } from './redux/selectors';
 import Loader from './components/Loader/Loader';
 
 const ContactForm = lazy(() => import('./components/ContactForm/ContactForm'));
@@ -10,7 +10,6 @@ const SearchBox = lazy(() => import('./components/SearchBox/SearchBox'));
 const ContactList = lazy(() => import('./components/ContactList/ContactList'));
 
 function App() {
-  const contacts = useSelector(selectVisibleContacts);
   const { loading, error } = useSelector(selectContacts);
   const dispatch = useDispatch();
 
@@ -26,7 +25,7 @@ function App() {
         <SearchBox />
         {loading && <Loader />}
         {error && <p>Can't load contacts at the moment</p>}
-        {!loading && !error && <ContactList contacts={contacts} />}
+        {!loading && !error && <ContactList />}
       </Suspense>
     </div>
   );
