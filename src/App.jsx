@@ -1,4 +1,4 @@
-import './App.css';
+import './App.jsx adjustment.css';
 import { Suspense, lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContacts } from './redux/contactsOps';
