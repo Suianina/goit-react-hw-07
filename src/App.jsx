@@ -1,4 +1,5 @@
-import './App.jsx adjustment.css';
+import './App.css'; // Імпорт правильного CSS файлу (без помилки)
+
 import { Suspense, lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContacts } from './redux/contactsOps';
