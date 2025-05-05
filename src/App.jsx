@@ -1,4 +1,4 @@
-import './App.css'; // Імпорт правильного CSS файлу (без помилки)
+import './App.css';
 
 import { Suspense, lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
